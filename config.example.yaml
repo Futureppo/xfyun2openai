@@ -1,0 +1,55 @@
+server:
+  listen: ":8787"
+  api_keys:
+    - "${PROXY_API_KEY}"
+
+xfyun:
+  default_endpoint: "https://maas-api.cn-huabei-1.xf-yun.com/v2.1/tti"
+  default_timeout_seconds: 120
+
+routing:
+  max_retries: 2
+  cooldown_seconds: 60
+
+apps:
+  app-main:
+    app_id: "${XFYUN_APP_MAIN_APP_ID}"
+    api_key: "${XFYUN_APP_MAIN_API_KEY}"
+    api_secret: "${XFYUN_APP_MAIN_API_SECRET}"
+    max_concurrency: 2
+
+  app-backup:
+    app_id: "${XFYUN_APP_BACKUP_APP_ID}"
+    api_key: "${XFYUN_APP_BACKUP_API_KEY}"
+    api_secret: "${XFYUN_APP_BACKUP_API_SECRET}"
+    max_concurrency: 2
+
+models:
+  z-image-turbo:
+    display_name: "Z-Image-Turbo"
+    model_id: "xopzimageturbo"
+    resource_id: "0"
+    patch_id: "${Z_IMAGE_TURBO_PATCH_ID}"
+    endpoint: "https://maas-api.cn-huabei-1.xf-yun.com/v2.1/tti"
+    apps:
+      - app-main
+      - app-backup
+    defaults:
+      size: "1024x1024"
+      steps: 20
+      guidance_scale: 5
+      scheduler: "Euler"
+
+  qwen-image-2512:
+    display_name: "Qwen-Image-2512"
+    model_id: "xopqwentti20b"
+    resource_id: "0"
+    patch_id: "${QWEN_IMAGE_2512_PATCH_ID}"
+    endpoint: "https://maas-api.cn-huabei-1.xf-yun.com/v2.1/tti"
+    apps:
+      - app-main
+    defaults:
+      size: "1024x1024"
+      steps: 20
+      guidance_scale: 5
+      scheduler: "Euler"
