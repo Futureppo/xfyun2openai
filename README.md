@@ -1,10 +1,10 @@
 # xfyun2openai
 
-`xfyun2openai` 是一个轻量级 OpenAI Images API 兼容代理。它把客户端发来的 OpenAI 风格图片生成请求，转换成讯飞开放平台 / 星辰 MaaS 图片生成 WebAPI 请求，并提供基于 YAML 的模型映射、多 app 凭证池、轮询和失败切换能力。
+`xfyun2openai` 是一个轻量级 OpenAI Images API 兼容代理。它把客户端发来的 OpenAI 风格图片生成请求，转换成讯飞开放平台图片生成 WebAPI 请求，并提供基于 YAML 的模型映射、多 app 凭证池、轮询和失败切换能力。
 
 ## 项目简介
 
-这个项目聚焦服务端代理本身，不包含管理面板、数据库和用户系统。配置完全由 `config.yaml` 和 `.env` 驱动，适合本地部署、私有网关封装或作为已有应用的图片代理层。
+项目适合本地部署、私有网关封装或作为已有应用的图片代理层。
 
 ## 功能特性
 
@@ -161,21 +161,6 @@ result = client.images.generate(
 print(result.data[0].b64_json[:100])
 ```
 
-### curl
-
-```bash
-curl http://localhost:8787/v1/images/generations \
-  -H "Authorization: Bearer sk-local-test" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "z-image-turbo",
-    "prompt": "一只赛博朋克风格的橘猫，霓虹灯，电影感",
-    "size": "1024x1024",
-    "n": 1,
-    "response_format": "b64_json"
-  }'
-```
-
 ## 多模型 / 多 app 配置示例
 
 ```yaml
@@ -232,33 +217,6 @@ docker compose -f .\docker-compose.example.yml up --build
 ```
 
 容器默认读取 `/app/config.yaml`，请通过只读挂载提供真实配置文件。
-
-## 测试与验证
-
-运行单元测试：
-
-```powershell
-go test ./...
-```
-
-覆盖率：
-
-```powershell
-go test ./... -cover
-```
-
-接口冒烟测试：
-
-```powershell
-curl.exe http://localhost:8787/healthz
-curl.exe http://localhost:8787/v1/models -H "Authorization: Bearer sk-local-test"
-```
-
-## 安全说明
-
-- 不要提交 `.env`、`config.yaml` 或任何真实凭证。
-- 不要在日志中打印完整签名 URL、`api_secret` 或 prompt 全文。
-- 如果 `server.api_keys` 为空，代理会允许无鉴权访问；生产环境必须配置至少一个 API Key。
 
 ## License
 
