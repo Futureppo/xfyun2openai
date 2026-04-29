@@ -204,16 +204,38 @@ models:
 
 ## Docker 部署
 
-构建镜像：
+每次 push 到 GitHub 后，仓库会通过 GitHub Actions 自动构建并推送镜像到 GHCR：
+
+`ghcr.io/futureppo/xfyun2openai`
+
+镜像标签规则：
+
+- `latest`：默认分支最新提交
+- `sha-<commit>`：每次 push 的提交镜像
+- `<branch-name>`：分支名镜像
+- `v*`：Git tag 镜像
+
+如果你的仓库或 package 还不是公开的，首次使用前需要先确认 GHCR package 可见性，或者在目标机器上先执行 `docker login ghcr.io`。
+
+直接拉取镜像：
 
 ```powershell
-docker build -t xfyun2openai:local .
+docker pull ghcr.io/futureppo/xfyun2openai:latest
 ```
 
-使用 compose：
+使用 compose 直接拉取并启动：
 
 ```powershell
-docker compose -f .\docker-compose.example.yml up --build
+docker compose -f .\docker-compose.example.yml pull
+docker compose -f .\docker-compose.example.yml up -d
+```
+
+如果要固定到某个构建版本，可以覆盖 `IMAGE_TAG`，例如：
+
+```powershell
+$env:IMAGE_TAG = "sha-<commit>"
+docker compose -f .\docker-compose.example.yml pull
+docker compose -f .\docker-compose.example.yml up -d
 ```
 
 容器默认读取 `/app/config.yaml`，请通过只读挂载提供真实配置文件。

@@ -1,0 +1,9 @@
+.git
+.github
+.env
+.env.*
+config.yaml
+dist
+bin
+promptxfyun2openai.md
+*.log

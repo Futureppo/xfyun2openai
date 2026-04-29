@@ -1,9 +1,7 @@
 services:
   xfyun2openai:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: xfyun2openai:local
+    image: ${IMAGE_REPOSITORY:-ghcr.io/futureppo/xfyun2openai}:${IMAGE_TAG:-latest}
+    pull_policy: always
     container_name: xfyun2openai
     ports:
       - "8787:8787"
